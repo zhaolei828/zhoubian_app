@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/actionbar_back_up_layout"
+            android:background="@drawable/mactionbar_common_btn"
+            android:clickable="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_alignParentLeft="false">
+        <ImageButton android:layout_width="wrap_content"
+                     android:layout_height="match_parent"
+                     android:src="@drawable/navi_back"
+                     android:contentDescription="@null"
+                     android:background="#00000000"
+                     android:id="@+id/actionbar_btn1"
+                     android:focusable="false"
+                     android:clickable="false"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:layout_toRightOf="@id/actionbar_btn1"
+                  android:text="@string/actionbar_back"
+                  android:textColor="@color/white"
+                  android:gravity="center_vertical"
+                  android:textSize="@dimen/textsize_medium"/>
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/mactionbar_common_btn"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical">
+        <Button
+                android:id="@+id/es_zr_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/es_zhuangrang"
+                android:minHeight="44dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:background="@color/btn_pres_blue"
+                android:textColor="@color/white"
+                android:tag="1"
+                />
+        <Button
+                android:id="@+id/es_qg_btn"
+                android:layout_toRightOf="@id/es_zr_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/es_qiugou"
+                android:minHeight="44dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:background="@color/btn_no_pres_blue"
+                android:textColor="@color/white"
+                android:tag="0"
+                />
+    </RelativeLayout>
+</RelativeLayout>

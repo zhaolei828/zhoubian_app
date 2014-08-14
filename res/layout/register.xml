@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@color/backgroud_grey">
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="3">
+        <com.derder.zhoubian.widget.RoundImageView
+                android:id="@+id/roundImage2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/default_portrait2"
+                android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:padding="8dp"
+            android:orientation="vertical">
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
+            <EditText android:layout_width="fill_parent"
+                      android:layout_height="48dp"
+                      android:singleLine="true"
+                      android:hint="@string/register_user_name"
+                      android:numeric="integer"/>
+            <EditText android:layout_width="fill_parent"
+                      android:layout_height="48dp"
+                      android:singleLine="true"
+                      android:password="true"
+                      android:hint="@string/register_user_password"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                >
+            <Button android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register_in"
+                    android:minHeight="44dp"
+                    android:background="@drawable/common_btn"
+                    android:textColor="@color/white"/>
+            <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+                <CheckBox
+                        android:id="@+id/had_read_cbox"
+                        android:text="@string/had_read_xy"
+                          android:layout_height="wrap_content"
+                          android:layout_width="wrap_content"
+                          android:layout_marginTop="4dp"/>
+                <TextView
+                        android:id="@+id/user_xy_tv"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/user_xy"
+                          android:clickable="true"
+                          android:textColor="@drawable/common_a_btn"
+                          android:layout_toRightOf="@+id/had_read_cbox"
+                          android:layout_alignBaseline="@+id/had_read_cbox"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+

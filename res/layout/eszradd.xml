@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/backgroud_grey">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="8dp"
+                  android:background="@color/white">
+        <EditText android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="@string/es_zr_title_hint"
+                  android:textColorHint="@color/init_text_color"
+                  android:textColor="@android:color/black"
+                  android:singleLine="true"
+                  android:inputType="text"
+                  android:background="@color/white"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="8dp"
+            android:layout_marginTop="1dp">
+        <EditText android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:hint="@string/es_zr_content_hint"
+                  android:inputType="textMultiLine"
+                  android:textColor="@android:color/black"
+                  android:textColorHint="@color/init_text_color"
+                  android:background="@color/white"
+                  android:gravity="left|top"
+                  android:minLines="6"/>
+        <ImageButton android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:background="@drawable/bg_token_photo"
+                     android:contentDescription="@null"
+                     android:id="@+id/eszr_token_photo_btn"/>
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:baselineAligned="false"
+                  android:layout_marginTop="8dp">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:background="@color/white"
+                      android:padding="8dp"
+                      android:layout_weight="1">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/es_zr_nowprice_lable"/>
+            <EditText android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text=""
+                      android:textColorHint="@color/init_text_color"
+                      android:textColor="@android:color/black"
+                      android:singleLine="true"
+                      android:inputType="numberDecimal"
+                      android:background="@color/white"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:background="@color/white"
+                      android:layout_weight="1"
+                      android:layout_marginLeft="1dp"
+                      android:padding="8dp">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/es_zr_oldprice_lable"/>
+            <EditText android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text=""
+                      android:textColorHint="@color/init_text_color"
+                      android:textColor="@android:color/black"
+                      android:singleLine="true"
+                      android:inputType="numberDecimal"
+                      android:background="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/white"
+                    android:layout_marginTop="8dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/es_zr_fenlei_lable"/>
+        <ImageView android:layout_height="wrap_content"
+                   android:layout_width="wrap_content"
+                   android:src="@drawable/icon_r_arrow"
+                   android:contentDescription="@null"
+                   android:layout_alignParentRight="true"
+                   android:id="@+id/zr_fl_r_arrow_image"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_toLeftOf="@id/zr_fl_r_arrow_image"
+                  android:id="@+id/zr_fl_choose_text"/>
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/white"
+                    android:layout_marginTop="1dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/es_zr_xinjiu_lable"/>
+        <ImageView android:layout_height="wrap_content"
+                   android:layout_width="wrap_content"
+                   android:src="@drawable/icon_r_arrow"
+                   android:contentDescription="@null"
+                   android:layout_alignParentRight="true"
+                   android:id="@+id/zr_xj_r_arrow_image"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_toLeftOf="@id/zr_xj_r_arrow_image"
+                  android:id="@+id/zr_xj_choose_text"/>
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/white"
+                    android:layout_marginTop="1dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/es_zr_jiaohuan_lable"/>
+        <Switch android:layout_alignParentRight="true"
+                android:id="@+id/zr_wwjh_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="不支持"
+                android:textOn="支持"/>
+    </RelativeLayout>
+</LinearLayout>

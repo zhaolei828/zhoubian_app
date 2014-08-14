@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/actionbar1_back_up_layout"
+            android:background="@drawable/mactionbar_common_btn"
+            android:clickable="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_alignParentLeft="false">
+        <ImageButton android:layout_width="wrap_content"
+                     android:layout_height="match_parent"
+                     android:src="@drawable/navi_back"
+                     android:contentDescription="@null"
+                     android:background="#00000000"
+                     android:id="@+id/actionbar1_btn1"
+                     android:focusable="false"
+                     android:clickable="false"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:layout_toRightOf="@id/actionbar1_btn1"
+                  android:text="@string/actionbar_back"
+                  android:textColor="@color/white"
+                  android:gravity="center_vertical"
+                android:textSize="@dimen/textsize_medium"/>
+    </RelativeLayout>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:textColor="@color/white"
+              android:gravity="center_vertical"
+              android:textSize="@dimen/textsize_medium"
+              android:layout_centerInParent="true"
+            android:id="@+id/actionbar1_title"/>
+    <Button
+            android:id="@+id/es_zr_submit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:minHeight="44dp"
+            android:paddingRight="8dp"
+            android:background="@drawable/common_btn"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+</RelativeLayout>
