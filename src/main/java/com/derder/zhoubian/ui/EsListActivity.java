@@ -185,14 +185,44 @@ public class EsListActivity extends Activity {
         fullScreenPpwinLayout.setFocusable(true);
         fullScreenPpwinLayout.setFocusableInTouchMode(true);
         fullScreenPopupWindow = new PopupWindow(fullScreenPpwinLayout, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT,true);
+        fullScreenPpwinLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Animation animation1 = AnimationUtils.loadAnimation(EsListActivity.this, R.anim.btn1_close);
+                closeAddMoreImageView.startAnimation(animation1);
+
+                Animation animation0 = AnimationUtils.loadAnimation(EsListActivity.this, R.anim.btn0_close);
+                animation0.setFillAfter(true);
+                animation0.setStartOffset(100);
+                animation0.setAnimationListener(new Animation.AnimationListener() {
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        fullScreenPopupWindow.dismiss();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                esZrqgLayout.startAnimation(animation0);
+                return true;
+            }
+        });
         fullScreenPpwinLayout.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    Animation animation1 = AnimationUtils.loadAnimation(EsListActivity.this,R.anim.btn1_close);
+                    Animation animation1 = AnimationUtils.loadAnimation(EsListActivity.this, R.anim.btn1_close);
                     closeAddMoreImageView.startAnimation(animation1);
 
-                    Animation animation0 = AnimationUtils.loadAnimation(EsListActivity.this,R.anim.btn0_close);
+                    Animation animation0 = AnimationUtils.loadAnimation(EsListActivity.this, R.anim.btn0_close);
                     animation0.setFillAfter(true);
                     animation0.setStartOffset(100);
                     animation0.setAnimationListener(new Animation.AnimationListener() {

@@ -1,7 +1,5 @@
 package com.derder.zhoubian.util;
 
-import junit.framework.Test;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
