@@ -6,14 +6,22 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.derder.zhoubian.R;
+import com.derder.zhoubian.widget.AutoNewlineViewGroup;
+
+import java.io.InputStream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,15 +32,29 @@ import com.derder.zhoubian.R;
 public class EszrAddActivity extends Activity {
     private int RESULT_LOAD_IMAGE = 0;//打开图库
     private int RESULT_LOAD_CAMERA = 1;//打开照相机
-
+    int tokenPhotoIconWidth = 0;
+    int tokenPhotoIconHeight = 0;
+    ImageButton tokenPhotoButton;
     LayoutInflater layoutInflater;
+    AutoNewlineViewGroup autoNewlineViewGroup;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eszradd);
         layoutInflater = LayoutInflater.from(this);
         initView();
-
-        ImageButton tokenPhotoButton = (ImageButton) findViewById(R.id.eszr_token_photo_btn);
+        autoNewlineViewGroup = (AutoNewlineViewGroup)findViewById(R.id.add_image_layout);
+        tokenPhotoButton = (ImageButton) findViewById(R.id.eszr_token_photo_btn);
+        Runnable mRunnable = new Runnable() {
+            public void run() {
+                tokenPhotoIconWidth = tokenPhotoButton.getMeasuredWidth();
+                tokenPhotoIconHeight = tokenPhotoButton.getMeasuredHeight();
+                autoNewlineViewGroup.setmCellWidth(tokenPhotoIconWidth);
+                autoNewlineViewGroup.setmCellHeight(tokenPhotoIconHeight);
+            }
+        };
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(mRunnable, 500);
         tokenPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,20 +118,35 @@ public class EszrAddActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//
-//            Cursor cursor = getContentResolver().query(selectedImage,
-//                    filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//            cursor.close();
-//
-//            ImageView imageView = (ImageView) findViewById(R.id.imgView);
-//            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//        }
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+
+            ImageView imageView = new ImageView(this);
+            //利用Bitmap对象创建缩略图
+            Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(picturePath), tokenPhotoIconWidth, tokenPhotoIconHeight);
+            //imageView 显示缩略图的ImageView
+            imageView.setImageBitmap(bitmap);
+            addView(autoNewlineViewGroup,imageView);
+        }
+    }
+
+    private void  addView(ViewGroup viewGrop,View childView){
+        int count = viewGrop.getChildCount();
+        if(count > 0){
+            final View lastChild = viewGrop.getChildAt( count-1 );
+            viewGrop.removeViewAt( count-1 );
+            viewGrop.addView(childView);
+            viewGrop.addView(lastChild);
+        }
     }
 }

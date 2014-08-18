@@ -35,11 +35,21 @@
                   android:background="@color/white"
                   android:gravity="left|top"
                   android:minLines="6"/>
-        <ImageButton android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:background="@drawable/bg_token_photo"
-                     android:contentDescription="@null"
-                     android:id="@+id/eszr_token_photo_btn"/>
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+            <com.derder.zhoubian.widget.AutoNewlineViewGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/add_image_layout">
+                <ImageButton android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:background="@drawable/bg_token_photo"
+                             android:contentDescription="@null"
+                             android:id="@+id/eszr_token_photo_btn"/>
+            </com.derder.zhoubian.widget.AutoNewlineViewGroup>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout android:orientation="horizontal"
