@@ -130,7 +130,6 @@ public class EszrAddActivity extends Activity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-
             ImageView imageView = new ImageView(this);
             //利用Bitmap对象创建缩略图
             Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(picturePath), tokenPhotoIconWidth, tokenPhotoIconHeight);

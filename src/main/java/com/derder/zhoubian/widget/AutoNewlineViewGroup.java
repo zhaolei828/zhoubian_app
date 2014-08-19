@@ -15,6 +15,9 @@ public class AutoNewlineViewGroup extends ViewGroup{
     private int mCellWidth;
     private int mCellHeight;
 
+    private int MARGIN_RIGHT = 8;
+    private int MARGIN_BOTTOM = 8;
+
     public AutoNewlineViewGroup(Context context) {
         super(context);
     }
@@ -47,13 +50,13 @@ public class AutoNewlineViewGroup extends ViewGroup{
             // 此处增加onlayout中的换行判断，用于计算所需的高度
             int width = child.getMeasuredWidth();
             int height = child.getMeasuredHeight();
-            mX += width;
-            mY = mRow * height + height;
+            mX += (width + MARGIN_RIGHT);
+            mY = mRow * (height+MARGIN_BOTTOM) + (height+MARGIN_BOTTOM);
             if (mX > mWidth)
             {
                 mX = width;
                 mRow++;
-                mY = mRow * height + height;
+                mY = mRow * (height+MARGIN_BOTTOM) + (height+MARGIN_BOTTOM);
             }
         }
         // 设置容器所需的宽度和高度
@@ -72,13 +75,13 @@ public class AutoNewlineViewGroup extends ViewGroup{
             final View child = this.getChildAt(i);
             int width = child.getMeasuredWidth();
             int height = child.getMeasuredHeight();
-            mX += width;
-            mY = mRow * height + height + t;
+            mX += (width+MARGIN_RIGHT);
+            mY = mRow * (height+MARGIN_BOTTOM) + (height+MARGIN_BOTTOM) + t;
             if (mX > r)
             {
-                mX = width + l;
+                mX = (width+MARGIN_RIGHT) + l;
                 mRow++;
-                mY = mRow * height + height + t;
+                mY = mRow * (height+MARGIN_BOTTOM) + (height+MARGIN_BOTTOM) + t;
             }
             child.layout(mX - width, mY - height, mX, mY);
         }
