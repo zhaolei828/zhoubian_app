@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,8 @@ import android.widget.*;
 import com.derder.zhoubian.R;
 import com.derder.zhoubian.widget.AutoNewlineViewGroup;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,9 +38,12 @@ public class EszrAddActivity extends Activity {
     LayoutInflater layoutInflater;
     AutoNewlineViewGroup autoNewlineViewGroup;
 
+    List<String> imgPathList;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eszradd);
+        imgPathList = new ArrayList<String>();
         layoutInflater = LayoutInflater.from(this);
         initView();
         autoNewlineViewGroup = (AutoNewlineViewGroup)findViewById(R.id.add_image_layout);
@@ -130,12 +133,24 @@ public class EszrAddActivity extends Activity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
+            imgPathList.add(picturePath);
             ImageView imageView = new ImageView(this);
             //利用Bitmap对象创建缩略图
             Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(picturePath), tokenPhotoIconWidth, tokenPhotoIconHeight);
             //imageView 显示缩略图的ImageView
             imageView.setImageBitmap(bitmap);
-            addView(autoNewlineViewGroup,imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArray("images",imgPathList.toArray(new String[imgPathList.size()]));
+                    intent.putExtras(bundle);
+                    intent.setClass(EszrAddActivity.this, ImageSwitcherActivity.class);
+                    startActivity(intent);
+                }
+            });
+            addView(autoNewlineViewGroup, imageView);
         }
     }
 

@@ -3,14 +3,17 @@ package com.derder.zhoubian.util;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,18 +23,47 @@ import java.io.InputStream;
  * 与服务器进行交互
  */
 public class InteractServer {
-
+    private String RESULT_MAP_CODE_KEY = "code";
+    private String RESULT_MAP_MESSAGE_KEY = "message";
     /**
      * get方式从服务器获取数据
+     *
      * @param url
      * @return
      * @throws IOException
      */
-    public static String getDataFromServer(String url) throws IOException {
-        String s = "";
+    public Map<String,String> getDataFromServer(String url) throws IOException {
         HttpClient client = new DefaultHttpClient();
         HttpGet get = new HttpGet(url);
         HttpResponse response = client.execute(get);
+        return result(response);
+    }
+
+    public Map<String,String> postDataToServer(String url, List<NameValuePair> textNameValuePairList,
+                                          List<NameValuePair> fileNameValuePairList) throws IOException {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        if (null != textNameValuePairList) {
+            for (NameValuePair textNameValuePair : textNameValuePairList) {
+                multipartEntityBuilder.addTextBody(textNameValuePair.getName(), textNameValuePair.getValue());
+            }
+        }
+
+        if (null != fileNameValuePairList) {
+            for (NameValuePair fileNameValuePair : fileNameValuePairList) {
+                multipartEntityBuilder.addBinaryBody(fileNameValuePair.getName(), new File(fileNameValuePair.getValue()));
+            }
+        }
+        HttpEntity httpEntity = multipartEntityBuilder.build();
+        httpPost.setEntity(httpEntity);
+        HttpResponse response = httpClient.execute(httpPost);
+        return result(response);
+    }
+
+    private Map<String,String> result(HttpResponse response) throws IOException {
+        Map<String,String> resultMap = new HashMap<String, String>();
+        String s = "";
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity entity = response.getEntity();
             InputStream is = entity.getContent();
@@ -42,15 +74,20 @@ public class InteractServer {
                 out.write(buf, 0, length);
             }
             s = new String(out.toByteArray(), "UTF-8");
-
+            resultMap.put(RESULT_MAP_CODE_KEY,HttpStatus.SC_OK+"");
+            resultMap.put(RESULT_MAP_MESSAGE_KEY,s);
         } else {
+            resultMap.put(RESULT_MAP_CODE_KEY,response.getStatusLine().getStatusCode()+"");
+            resultMap.put(RESULT_MAP_MESSAGE_KEY,response.getStatusLine().getReasonPhrase());
         }
-        return s;
+        return resultMap;
     }
 
-    public static String postDataToServer(String url) {
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpRequst = new HttpPost(url);
-        return null;
+    public String getRESULT_MAP_CODE_KEY() {
+        return RESULT_MAP_CODE_KEY;
+    }
+
+    public String getRESULT_MAP_MESSAGE_KEY() {
+        return RESULT_MAP_MESSAGE_KEY;
     }
 }

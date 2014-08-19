@@ -15,6 +15,7 @@ import com.derder.zhoubian.R;
 import com.derder.zhoubian.adapter.EsListItemAdapter;
 import com.derder.zhoubian.bean.EsItem;
 import com.derder.zhoubian.bean.UrlConstant;
+import com.derder.zhoubian.util.InteractServer;
 import com.derder.zhoubian.util.ParseServerData;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -74,7 +75,8 @@ public class EsListActivity extends Activity {
         dialog.setCancelable(false);
 
         //获取数据
-        parseServerData = new ParseServerData();
+        InteractServer interactServer = new InteractServer();
+        parseServerData = new ParseServerData(interactServer);
         eslist = new LinkedList<EsItem>();
         new GetDataTask().execute(UrlConstant.ERSHOU_ZHUANRANG_API_URL,null);
 
@@ -365,5 +367,13 @@ public class EsListActivity extends Activity {
             super.onPostExecute(result);
             dialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(null != addBtnPopupWindow){
+            addBtnPopupWindow.dismiss();
+        }
+        super.onDestroy();
     }
 }
