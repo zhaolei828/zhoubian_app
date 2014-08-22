@@ -19,6 +19,6 @@
         </activity>
         <activity android:name=".ui.EsListActivity"/>
         <activity android:name=".ui.EszrAddActivity"/>
-        <activity android:name=".ui.ImageSwitcherActivity"/>
+        <activity android:name=".ui.ImageSwitcherActivity" android:theme="@style/NoActionBarTheme"/>
     </application>
 </manifest>

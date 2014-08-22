@@ -18,8 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.derder.zhoubian.R;
+import com.derder.zhoubian.util.BitmapUtils;
 import com.derder.zhoubian.widget.AutoNewlineViewGroup;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,14 +139,22 @@ public class EszrAddActivity extends Activity {
             ImageView imageView = new ImageView(this);
             //利用Bitmap对象创建缩略图
             Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(picturePath), tokenPhotoIconWidth, tokenPhotoIconHeight);
+            try {
+                int degree = BitmapUtils.getBitmapDegree(picturePath);
+                bitmap = BitmapUtils.rotateBitmapByDegree(bitmap, degree);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             //imageView 显示缩略图的ImageView
             imageView.setImageBitmap(bitmap);
+            imageView.setTag(imgPathList.size());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putStringArray("images",imgPathList.toArray(new String[imgPathList.size()]));
+                    bundle.putInt("position",(Integer)view.getTag());
                     intent.putExtras(bundle);
                     intent.setClass(EszrAddActivity.this, ImageSwitcherActivity.class);
                     startActivity(intent);
