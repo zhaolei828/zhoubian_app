@@ -3,6 +3,7 @@ package com.derder.zhoubian.ui;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,20 +11,27 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.derder.zhoubian.R;
+import com.derder.zhoubian.bean.UrlConstant;
 import com.derder.zhoubian.util.BitmapUtils;
+import com.derder.zhoubian.util.InteractServer;
 import com.derder.zhoubian.widget.AutoNewlineViewGroup;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,15 +47,36 @@ public class EszrAddActivity extends Activity {
     ImageButton tokenPhotoButton;
     LayoutInflater layoutInflater;
     AutoNewlineViewGroup autoNewlineViewGroup;
+    ProgressDialog dialog;
 
     List<String> imgPathList;
+
+    //转让信息表单
+    EditText titleText;
+    EditText contentText;
+    EditText nowpriceText;
+    EditText oldpriceText;
+    Switch changeFlagSwitch;
+
+    InteractServer interactServer;
+    List<NameValuePair> textNameValuePairList;
+    List<NameValuePair> fileNameValuePairList;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eszradd);
         imgPathList = new ArrayList<String>();
         layoutInflater = LayoutInflater.from(this);
+        interactServer = new InteractServer();
+        textNameValuePairList = new ArrayList<NameValuePair>();
+        fileNameValuePairList = new ArrayList<NameValuePair>();
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("请稍候...");
+        dialog.setCancelable(false);
+
         initView();
+
         autoNewlineViewGroup = (AutoNewlineViewGroup)findViewById(R.id.add_image_layout);
         tokenPhotoButton = (ImageButton) findViewById(R.id.eszr_token_photo_btn);
         Runnable mRunnable = new Runnable() {
@@ -89,6 +118,12 @@ public class EszrAddActivity extends Activity {
                 dialog.show();
             }
         });
+
+        titleText = (EditText)findViewById(R.id.es_zr_title);
+        contentText = (EditText)findViewById(R.id.es_zr_content);
+        nowpriceText = (EditText)findViewById(R.id.es_zr_nowprice);
+        oldpriceText = (EditText)findViewById(R.id.es_zr_oldprice);
+        changeFlagSwitch = (Switch)findViewById(R.id.zr_wwjh_switch);
     }
 
     private void initView() {
@@ -109,6 +144,45 @@ public class EszrAddActivity extends Activity {
             @Override
             public void onClick(View v) {
                 EszrAddActivity.this.finish();
+            }
+        });
+
+        Button submitButton = (Button)customView.findViewById(R.id.es_zr_submit_btn);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //标题
+                String title = titleText.getText().toString();
+                NameValuePair titleNameValuePair = new BasicNameValuePair("title",title);
+                textNameValuePairList.add(titleNameValuePair);
+
+                String content = contentText.getText().toString();
+                NameValuePair contentNameValuePair = new BasicNameValuePair("description",content);
+                textNameValuePairList.add(contentNameValuePair);
+
+                String nowPrice = nowpriceText.getText().toString();
+                NameValuePair nowPriceNameValuePair = new BasicNameValuePair("now_price",nowPrice);
+                textNameValuePairList.add(nowPriceNameValuePair);
+
+                String oldPrice = oldpriceText.getText().toString();
+                NameValuePair oldPriceNameValuePair = new BasicNameValuePair("old_price",oldPrice);
+                textNameValuePairList.add(oldPriceNameValuePair);
+
+                boolean checked = changeFlagSwitch.isChecked();
+                String changeFlag = "";
+                if(checked){
+                    changeFlag = "1";
+                }else {
+                    changeFlag = "0";
+                }
+                NameValuePair changeFlagNameValuePair = new BasicNameValuePair("change_flag",changeFlag);
+                textNameValuePairList.add(changeFlagNameValuePair);
+
+                for( int i=0 ; i<imgPathList.size(); i++) {
+                    NameValuePair filepathNameValuePair = new BasicNameValuePair("file"+i,imgPathList.get(i));
+                    fileNameValuePairList.add(filepathNameValuePair);
+                }
+                new SubmitTask().execute(textNameValuePairList,fileNameValuePairList);
             }
         });
     }
@@ -153,8 +227,8 @@ public class EszrAddActivity extends Activity {
                 public void onClick(View view) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putStringArray("images",imgPathList.toArray(new String[imgPathList.size()]));
-                    bundle.putInt("position",(Integer)view.getTag());
+                    bundle.putStringArray("images", imgPathList.toArray(new String[imgPathList.size()]));
+                    bundle.putInt("position", (Integer) view.getTag());
                     intent.putExtras(bundle);
                     intent.setClass(EszrAddActivity.this, ImageSwitcherActivity.class);
                     startActivity(intent);
@@ -171,6 +245,35 @@ public class EszrAddActivity extends Activity {
             viewGrop.removeViewAt( count-1 );
             viewGrop.addView(childView);
             viewGrop.addView(lastChild);
+        }
+    }
+
+    private class SubmitTask extends AsyncTask<List<NameValuePair>, Void, Map<String,String>> {
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Map<String,String> doInBackground(List<NameValuePair>... params) {
+            Map<String,String> result = null;
+            try {
+                result = interactServer.postDataToServer(UrlConstant.ERSHOU_ADD_API_URL,params[0],params[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("dddd","dddd",e);
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Map<String,String> result) {
+            if(null != result){
+
+            }
+            super.onPostExecute(result);
+            dialog.dismiss();
         }
     }
 }

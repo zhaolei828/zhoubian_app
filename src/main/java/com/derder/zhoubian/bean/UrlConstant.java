@@ -12,4 +12,6 @@ public class UrlConstant {
 
     public final static String ERSHOU_ZHUANRANG_API_URL = API_SERVER_ROOT + "ershou/list/format/json/es_type/1";
     public final static String ERSHOU_QIUGOU_API_URL = API_SERVER_ROOT + "ershou/list/format/json/es_type/2";
+
+    public final static String ERSHOU_ADD_API_URL = API_SERVER_ROOT + "ershou/add";
 }

@@ -7,10 +7,17 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +51,11 @@ public class InteractServer {
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        multipartEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        ContentType TEXT_PLAIN = ContentType.create("text/plain", Charset.forName("UTF_8"));
         if (null != textNameValuePairList) {
             for (NameValuePair textNameValuePair : textNameValuePairList) {
-                multipartEntityBuilder.addTextBody(textNameValuePair.getName(), textNameValuePair.getValue());
+                multipartEntityBuilder.addTextBody(textNameValuePair.getName(), textNameValuePair.getValue(),TEXT_PLAIN);
             }
         }
 
@@ -63,7 +72,7 @@ public class InteractServer {
 
     private Map<String,String> result(HttpResponse response) throws IOException {
         Map<String,String> resultMap = new HashMap<String, String>();
-        String s = "";
+        String s;
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             HttpEntity entity = response.getEntity();
             InputStream is = entity.getContent();

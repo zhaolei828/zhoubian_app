@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.derder.zhoubian.R;
 import com.derder.zhoubian.util.BitmapUtils;
 
@@ -29,6 +31,7 @@ public class ImageSwitcherActivity extends Activity {
     private ImageView[] mImageViews;
     private ProgressDialog dialog;
     DisplayMetrics dm;
+    TextView positionText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class ImageSwitcherActivity extends Activity {
         dialog = new ProgressDialog(this);
         dialog.setMessage("请稍候...");
         dialog.setCancelable(false);
+        positionText = (TextView)findViewById(R.id.view_item_position);
 
         dm = getResources().getDisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -46,14 +50,20 @@ public class ImageSwitcherActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         int position = bundle.getInt("position");
         imgPaths = bundle.getStringArray("images");
-        //将图片装载到数组中
         mImageViews = new ImageView[imgPaths.length];
         for(int i=0; i<mImageViews.length; i++){
             ImageView imageView = new ImageView(this);
             mImageViews[i] = imageView;
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageSwitcherActivity.this.finish();
+                }
+            });
         }
         viewPager.setAdapter(new MyAdapter());
         viewPager.setCurrentItem(position - 1);
+        positionText.setText(position+"/"+mImageViews.length);
         new GetDataTask().execute();
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -63,7 +73,7 @@ public class ImageSwitcherActivity extends Activity {
 
             @Override
             public void onPageSelected(int i) {
-
+                positionText.setText((i+1)+"/"+mImageViews.length);
             }
 
             @Override
@@ -90,6 +100,7 @@ public class ImageSwitcherActivity extends Activity {
                     bitmap = BitmapFactory.decodeByteArray(bitmapByteArray,0,bitmapByteArray.length);
                     int degree = BitmapUtils.getBitmapDegree(imgPaths[i]);
                     bitmap = BitmapUtils.rotateBitmapByDegree(bitmap, degree);
+                    Log.i("dddd",bitmap.getByteCount()+"");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
