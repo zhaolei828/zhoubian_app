@@ -1,5 +1,7 @@
 package com.derder.zhoubian.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -52,6 +54,7 @@ public class InteractServer {
         HttpPost httpPost = new HttpPost(url);
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        multipartEntityBuilder.setCharset(Charset.forName("UTF_8"));
         ContentType TEXT_PLAIN = ContentType.create("text/plain", Charset.forName("UTF_8"));
         if (null != textNameValuePairList) {
             for (NameValuePair textNameValuePair : textNameValuePairList) {
@@ -61,7 +64,15 @@ public class InteractServer {
 
         if (null != fileNameValuePairList) {
             for (NameValuePair fileNameValuePair : fileNameValuePairList) {
-                multipartEntityBuilder.addBinaryBody(fileNameValuePair.getName(), new File(fileNameValuePair.getValue()));
+                Bitmap bitmap;
+                byte[] bitmapByteArray = BitmapUtils.decodeBitmap(fileNameValuePair.getValue(),800,480);
+                bitmap = BitmapFactory.decodeByteArray(bitmapByteArray, 0, bitmapByteArray.length);
+                int degree = BitmapUtils.getBitmapDegree(fileNameValuePair.getValue());
+                bitmap = BitmapUtils.rotateBitmapByDegree(bitmap, degree);
+//                InputStream inputStream = BitmapUtils.compressImage2(bitmap);
+
+                multipartEntityBuilder.addBinaryBody(fileNameValuePair.getName(),BitmapUtils.compressImage2(bitmap),ContentType.APPLICATION_OCTET_STREAM,fileNameValuePair.getName()+".jpg");
+//                multipartEntityBuilder.addBinaryBody(fileNameValuePair.getName(),new File(fileNameValuePair.getValue()));
             }
         }
         HttpEntity httpEntity = multipartEntityBuilder.build();

@@ -5,10 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,8 +17,7 @@ public class BitmapUtils {
     /**
      * 读取图片的旋转的角度
      *
-     * @param path
-     *            图片绝对路径
+     * @param path 图片绝对路径
      * @return 图片的旋转角度
      */
     public static int getBitmapDegree(String path) throws IOException {
@@ -44,13 +40,12 @@ public class BitmapUtils {
         }
         return degree;
     }
+
     /**
      * 将图片按照某个角度进行旋转
      *
-     * @param bm
-     *            需要旋转的图片
-     * @param degree
-     *            旋转角度
+     * @param bm     需要旋转的图片
+     * @param degree 旋转角度
      * @return 旋转后的图片
      */
     public static Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
@@ -68,7 +63,7 @@ public class BitmapUtils {
         return returnBm;
     }
 
-    public static byte[] decodeBitmap(String path,int desWidth,int desHeight) throws IOException {
+    public static byte[] decodeBitmap(String path, int desWidth, int desHeight) throws IOException {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;// 设置成了true,不占用内存，只获取bitmap宽高
         BitmapFactory.decodeFile(path, opts);
@@ -115,6 +110,7 @@ public class BitmapUtils {
 
         return roundedSize;
     }
+
     private static int computeInitialSampleSize(BitmapFactory.Options options,
                                                 int minSideLength, int maxNumOfPixels) {
         double w = options.outWidth;
@@ -136,5 +132,33 @@ public class BitmapUtils {
         } else {
             return upperBound;
         }
+    }
+
+    //压缩图片大小
+    public static Bitmap compressImage(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        int options = 100;
+        while (baos.toByteArray().length / 1024 > 100) {
+            baos.reset();
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            options -= 10;
+        }
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
+        return bitmap;
+    }
+
+    public static byte[] compressImage2(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        int options = 100;
+        while (baos.toByteArray().length / 1024 > 100) {
+            baos.reset();
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            options -= 10;
+        }
+        //ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        return baos.toByteArray();
     }
 }

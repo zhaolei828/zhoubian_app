@@ -100,7 +100,6 @@ public class ImageSwitcherActivity extends Activity {
                     bitmap = BitmapFactory.decodeByteArray(bitmapByteArray,0,bitmapByteArray.length);
                     int degree = BitmapUtils.getBitmapDegree(imgPaths[i]);
                     bitmap = BitmapUtils.rotateBitmapByDegree(bitmap, degree);
-                    Log.i("dddd",bitmap.getByteCount()+"");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -25,6 +25,7 @@ import com.derder.zhoubian.bean.UrlConstant;
 import com.derder.zhoubian.util.BitmapUtils;
 import com.derder.zhoubian.util.InteractServer;
 import com.derder.zhoubian.widget.AutoNewlineViewGroup;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -151,6 +152,11 @@ public class EszrAddActivity extends Activity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                textNameValuePairList.clear();
+                fileNameValuePairList.clear();
+
+                NameValuePair esTypeNameValuePair = new BasicNameValuePair("es_type","1");
+                textNameValuePairList.add(esTypeNameValuePair);
                 //标题
                 String title = titleText.getText().toString();
                 NameValuePair titleNameValuePair = new BasicNameValuePair("title",title);
@@ -178,8 +184,13 @@ public class EszrAddActivity extends Activity {
                 NameValuePair changeFlagNameValuePair = new BasicNameValuePair("change_flag",changeFlag);
                 textNameValuePairList.add(changeFlagNameValuePair);
 
+                NameValuePair goodsTypeNameValuePair = new BasicNameValuePair("goods_type","1");
+                textNameValuePairList.add(goodsTypeNameValuePair);
+                NameValuePair recencyInfoNameValuePair = new BasicNameValuePair("recency_info","1");
+                textNameValuePairList.add(recencyInfoNameValuePair);
+
                 for( int i=0 ; i<imgPathList.size(); i++) {
-                    NameValuePair filepathNameValuePair = new BasicNameValuePair("file"+i,imgPathList.get(i));
+                    NameValuePair filepathNameValuePair = new BasicNameValuePair("userfile"+i,imgPathList.get(i));
                     fileNameValuePairList.add(filepathNameValuePair);
                 }
                 new SubmitTask().execute(textNameValuePairList,fileNameValuePairList);
@@ -270,7 +281,12 @@ public class EszrAddActivity extends Activity {
         @Override
         protected void onPostExecute(Map<String,String> result) {
             if(null != result){
-
+                String resultCode = result.get("code");
+                if((HttpStatus.SC_OK+"").equals(resultCode)){
+                    Intent intent = new Intent();
+                    intent.setClass(EszrAddActivity.this,EsListActivity.class);
+                    startActivity(intent);
+                }
             }
             super.onPostExecute(result);
             dialog.dismiss();
