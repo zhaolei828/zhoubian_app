@@ -4,7 +4,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
         android:id="@+id/es_main">
-
     <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/list_layout" android:layout_height="fill_parent"
             android:layout_width="fill_parent" />

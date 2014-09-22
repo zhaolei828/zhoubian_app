@@ -13,9 +13,9 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +31,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,11 +58,42 @@ public class EszrAddActivity extends Activity {
     EditText contentText;
     EditText nowpriceText;
     EditText oldpriceText;
+    TextView flTextView;
+    TextView xjTextView;
     Switch changeFlagSwitch;
 
     InteractServer interactServer;
     List<NameValuePair> textNameValuePairList;
     List<NameValuePair> fileNameValuePairList;
+
+    Map<String,Integer> xjMap = new HashMap<String, Integer>(){{
+        put("一成新",1);
+        put("二成新",2);
+        put("三成新",3);
+        put("四成新",4);
+        put("五成新",5);
+        put("六成新",6);
+        put("七成新",7);
+        put("八成新",8);
+        put("九成新",9);
+        put("全新",10);
+    }};
+    String[] xjarray;
+
+    Map<String,Integer> flMap = new HashMap<String, Integer>(){{
+        put("办公设备",1);
+        put("手机数码",2);
+        put("美容保健",3);
+        put("母婴玩具",4);
+        put("服装箱包",5);
+        put("文体户外",6);
+        put("家电",7);
+        put("家具",8);
+        put("图书音像",9);
+        put("车辆",10);
+        put("其他",11);
+    }};
+    String[] flarray;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +103,10 @@ public class EszrAddActivity extends Activity {
         interactServer = new InteractServer();
         textNameValuePairList = new ArrayList<NameValuePair>();
         fileNameValuePairList = new ArrayList<NameValuePair>();
+        xjarray = new String[xjMap.size()];
+        xjarray = xjMap.keySet().toArray(xjarray);
+        flarray = new String[flMap.size()];
+        flarray = flMap.keySet().toArray(flarray);
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("请稍候...");
@@ -110,7 +146,14 @@ public class EszrAddActivity extends Activity {
                                                 startActivityForResult(Intent.createChooser(intent, "Pick any photo"), RESULT_LOAD_IMAGE);
                                                 break;
                                             case 1:
-                                                Toast.makeText(EszrAddActivity.this, "打开照相机", Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(EszrAddActivity.this, "打开照相机", Toast.LENGTH_SHORT).show();
+                                                String state = Environment.getExternalStorageState();
+                                                if (!state.equals(Environment.MEDIA_MOUNTED)) {
+                                                    Toast.makeText(EszrAddActivity.this,"请插入SD卡", Toast.LENGTH_LONG).show();
+                                                }else {
+                                                    intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                                                    startActivityForResult(intent, RESULT_LOAD_CAMERA);
+                                                }
                                                 break;
                                         }
                                     }
@@ -125,6 +168,46 @@ public class EszrAddActivity extends Activity {
         nowpriceText = (EditText)findViewById(R.id.es_zr_nowprice);
         oldpriceText = (EditText)findViewById(R.id.es_zr_oldprice);
         changeFlagSwitch = (Switch)findViewById(R.id.zr_wwjh_switch);
+        flTextView = (TextView) findViewById(R.id.zr_fl_choose_text);
+        xjTextView = (TextView) findViewById(R.id.zr_xj_choose_text);
+
+        RelativeLayout flRelativeLayout = (RelativeLayout)findViewById(R.id.es_zr_fenlei_layout);
+        flRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(EszrAddActivity.this)
+                        .setTitle("请选择")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setItems(flarray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                flTextView.setText(flarray[which]);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+            }
+        });
+
+        RelativeLayout xjRelativeLayout = (RelativeLayout)findViewById(R.id.es_zr_xinjiu_layout);
+        xjRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(EszrAddActivity.this)
+                        .setTitle("请选择")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setItems(xjarray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                xjTextView.setText(xjarray[which]);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+            }
+        });
     }
 
     private void initView() {
@@ -155,6 +238,10 @@ public class EszrAddActivity extends Activity {
                 textNameValuePairList.clear();
                 fileNameValuePairList.clear();
 
+                if(null == titleText.getText() || "".equals(titleText.getText().toString())){
+
+                }
+
                 NameValuePair esTypeNameValuePair = new BasicNameValuePair("es_type","1");
                 textNameValuePairList.add(esTypeNameValuePair);
                 //标题
@@ -184,9 +271,11 @@ public class EszrAddActivity extends Activity {
                 NameValuePair changeFlagNameValuePair = new BasicNameValuePair("change_flag",changeFlag);
                 textNameValuePairList.add(changeFlagNameValuePair);
 
-                NameValuePair goodsTypeNameValuePair = new BasicNameValuePair("goods_type","1");
+                String goodsType = flTextView.getText().toString();
+                NameValuePair goodsTypeNameValuePair = new BasicNameValuePair("goods_type",flMap.get(goodsType)+"");
                 textNameValuePairList.add(goodsTypeNameValuePair);
-                NameValuePair recencyInfoNameValuePair = new BasicNameValuePair("recency_info","1");
+                String recency = xjTextView.getText().toString();
+                NameValuePair recencyInfoNameValuePair = new BasicNameValuePair("recency_info",xjMap.get(recency)+"");
                 textNameValuePairList.add(recencyInfoNameValuePair);
 
                 for( int i=0 ; i<imgPathList.size(); i++) {
@@ -208,7 +297,7 @@ public class EszrAddActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        if (resultCode == RESULT_OK && null != data && (requestCode == RESULT_LOAD_IMAGE || requestCode == RESULT_LOAD_CAMERA)) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -273,7 +362,6 @@ public class EszrAddActivity extends Activity {
                 result = interactServer.postDataToServer(UrlConstant.ERSHOU_ADD_API_URL,params[0],params[1]);
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("dddd","dddd",e);
             }
             return result;
         }
@@ -290,6 +378,7 @@ public class EszrAddActivity extends Activity {
             }
             super.onPostExecute(result);
             dialog.dismiss();
+            finish();
         }
     }
 }

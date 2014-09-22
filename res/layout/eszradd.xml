@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/backgroud_grey">
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/backgroud_grey">
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:padding="8dp"
-                      android:background="@color/white">
-            <EditText
-                    android:id="@+id/es_zr_title"
-                    android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:hint="@string/es_zr_title_hint"
-                      android:textColorHint="@color/init_text_color"
-                      android:textColor="@android:color/black"
-                      android:singleLine="true"
-                      android:inputType="text"
-                      android:background="@color/white"/>
-        </LinearLayout>
+            android:layout_height="wrap_content">
+
+        <EditText
+                android:id="@+id/es_zr_title"
+                android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="@string/es_zr_title_hint"
+                  android:textColorHint="@color/init_text_color"
+                  android:textColor="@android:color/black"
+                  android:singleLine="true"
+                  android:background="@color/white"
+                  android:padding="8dp"/>
 
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:padding="8dp"
                 android:layout_marginTop="1dp">
             <EditText
                     android:id="@+id/es_zr_content"
                     android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:hint="@string/es_zr_content_hint"
-                      android:inputType="textMultiLine"
-                      android:textColor="@android:color/black"
-                      android:textColorHint="@color/init_text_color"
-                      android:background="@color/white"
-                      android:gravity="left|top"
-                      android:minLines="6"/>
+                    android:layout_height="match_parent"
+                    android:hint="@string/es_zr_content_hint"
+                    android:inputType="textMultiLine"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/init_text_color"
+                    android:background="@color/white"
+                    android:gravity="left|top"
+                    android:minLines="6"
+                    android:padding="8dp"/>
             <LinearLayout android:orientation="horizontal"
                           android:layout_width="match_parent"
-                          android:layout_height="wrap_content">
+                          android:layout_height="wrap_content"
+                          android:background="@color/white"
+                    android:padding="8dp">
                 <com.derder.zhoubian.widget.AutoNewlineViewGroup
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/add_image_layout">
+                        android:id="@+id/add_image_layout"
+                        android:background="@color/white">
                     <ImageButton android:layout_width="wrap_content"
                                  android:layout_height="wrap_content"
                                  android:background="@drawable/bg_token_photo"
@@ -55,7 +54,6 @@
                                  android:id="@+id/eszr_token_photo_btn"/>
                 </com.derder.zhoubian.widget.AutoNewlineViewGroup>
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout android:orientation="horizontal"
@@ -113,7 +111,8 @@
                         android:paddingTop="12dp"
                         android:paddingBottom="12dp"
                         android:paddingLeft="8dp"
-                        android:paddingRight="8dp">
+                        android:paddingRight="8dp"
+                        android:id="@+id/es_zr_fenlei_layout">
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="@string/es_zr_fenlei_lable"/>
@@ -125,7 +124,8 @@
                        android:id="@+id/zr_fl_r_arrow_image"/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:layout_toLeftOf="@id/zr_fl_r_arrow_image"
+                      android:layout_toLeftOf="@+id/zr_fl_r_arrow_image"
+                      android:layout_marginRight="8dp"
                       android:id="@+id/zr_fl_choose_text"/>
         </RelativeLayout>
         <RelativeLayout android:layout_width="match_parent"
@@ -136,7 +136,8 @@
                         android:paddingTop="12dp"
                         android:paddingBottom="12dp"
                         android:paddingLeft="8dp"
-                        android:paddingRight="8dp">
+                        android:paddingRight="8dp"
+                        android:id="@+id/es_zr_xinjiu_layout">
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="@string/es_zr_xinjiu_lable"/>
@@ -149,6 +150,7 @@
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_toLeftOf="@id/zr_xj_r_arrow_image"
+                      android:layout_marginRight="8dp"
                       android:id="@+id/zr_xj_choose_text"/>
         </RelativeLayout>
         <RelativeLayout android:layout_width="match_parent"

@@ -56,7 +56,7 @@ public class EsListActivity extends Activity {
     ImageView addMoreImageView;
     ImageView closeAddMoreImageView;
 
-    private ProgressDialog dialog;
+    //private ProgressDialog dialog;
 
     int estype = 1;
 
@@ -65,14 +65,16 @@ public class EsListActivity extends Activity {
 
     int upDown = PULL_UP;
 
+    ProgressBar progressBar;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eslist);
         inflater  = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         initView();
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("请稍候...");
-        dialog.setCancelable(false);
+        //dialog = new ProgressDialog(this);
+        //dialog.setMessage("请稍候...");
+        //dialog.setCancelable(false);
 
         //获取数据
         InteractServer interactServer = new InteractServer();
@@ -119,6 +121,12 @@ public class EsListActivity extends Activity {
             }
         });
         pullToRefreshListView.setAdapter(adapter);
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(EsListActivity.this, "点击条目", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initView() {
@@ -179,6 +187,7 @@ public class EsListActivity extends Activity {
                 EsListActivity.this.finish();
             }
         });
+        progressBar = (ProgressBar) findViewById(R.id.widget110);
     }
 
     private void initPopwin(){
@@ -257,6 +266,7 @@ public class EsListActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setClass(EsListActivity.this, EszrAddActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         esqgAddBtn = (Button)fullScreenPpwinLayout.findViewById(R.id.add_btn_esqg);
@@ -331,7 +341,8 @@ public class EsListActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            dialog.show();
+            //dialog.show();
+            progressBar.setVisibility(ProgressBar. VISIBLE);
             super.onPreExecute();
         }
 
@@ -365,7 +376,8 @@ public class EsListActivity extends Activity {
             // Call onRefreshComplete when the list has been refreshed.
             pullToRefreshListView.onRefreshComplete();
             super.onPostExecute(result);
-            dialog.dismiss();
+            progressBar.setVisibility(ProgressBar. INVISIBLE );
+            //dialog.dismiss();
         }
     }
 
